@@ -1,5 +1,5 @@
 # custom-product-hw
 
 <p>
-Need installation of Metabox plugin for enable metabox group.
+Need installation of Meta Box plugin.
 </p>
