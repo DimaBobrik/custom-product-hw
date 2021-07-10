@@ -1,5 +1,5 @@
 <?php get_header();
-$product_title = ! empty( rwmb_get_value( 'text_product_title' ) ) ? rwmb_get_value( 'text_product_title' ) : the_title();
+$product_title = ! empty( rwmb_get_value( 'text_product_title' ) ) ? rwmb_get_value( 'text_product_title' ) : get_the_title();
 ?>
 	<div id="ThePage">
 		<div class="entry">

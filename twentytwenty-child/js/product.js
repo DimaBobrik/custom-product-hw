@@ -1,8 +1,8 @@
 $(document).ready(function () {
-    $('.gallery-image').click(function () {
+    $('.gallery-image').on( 'click', function () {
         $('.product-image').attr('src', $(this).attr('src'));
     });
-    $('.media-tabs .btn').click(function () {
+    $('.media-tabs .btn').on( 'click', function () {
         $('.media-tabs .btn').removeClass('active');
         $(this).addClass('active');
         $('.media-holder > div').removeClass('show');

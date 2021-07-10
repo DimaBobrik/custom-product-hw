@@ -9,7 +9,7 @@ if ( version_compare( $GLOBALS['wp_version'], '5.0-beta', '>' ) ) {
 }
 
 // Register Style and Scripts.
-function register_styles() {
+function register_styles(): void {
 	$theme_version = wp_get_theme()->get( 'Version' );
 	wp_enqueue_style( 'main-style', get_stylesheet_uri(), array(), $theme_version );
 	wp_deregister_script( 'wp-embed' );
@@ -132,7 +132,7 @@ if ( ! function_exists( 'custom_post_type' ) ) {
 
 add_filter( 'rwmb_meta_boxes', 'product_register_meta_boxes' );
 
-function product_register_meta_boxes( $meta_boxes ) {
+function product_register_meta_boxes( $meta_boxes ) : array {
 	$meta_boxes[] = array(
 		'title'      => esc_html__( 'Product Settings', 'custom-product' ),
 		'id'         => 'product_fields',
@@ -194,7 +194,7 @@ function product_register_meta_boxes( $meta_boxes ) {
 // @param integer:product_id id of product
 // @param color:product_box_bg background of product box
 
-function short_product_box( $atts = array() ) {
+function short_product_box( $atts = array() ): mixed {
 	if ( ! empty( $atts['product_id'] ) ) {
 		$product_box = product_box( $atts );
 		return $product_box;
@@ -257,7 +257,7 @@ add_action( 'rest_api_init', function () {
 		'callback' => 'get_product_posts',
 		'args'     => array(
 			'id'        => array(
-				'validate_callback' => function ( $param, $request, $key ) {
+				'validate_callback' => function ( $param, $request, $key ) : bool {
 					if ( is_numeric( $param ) ) {
 						$taxonomy = get_term( $param );
 
@@ -266,7 +266,7 @@ add_action( 'rest_api_init', function () {
 				},
 			),
 			'stringvar' => array(
-				'validate_callback' => function ( $param, $request, $key ) {
+				'validate_callback' => function ( $param, $request, $key ) : bool {
 					if ( is_string( $param ) ) {
 						$taxonomy = get_term_by( 'slug', $param, 'product_taxonomy' );
 
@@ -278,7 +278,7 @@ add_action( 'rest_api_init', function () {
 	) );
 } );
 
-function get_product_posts( $taxonomy_info ) {
+function get_product_posts( array $taxonomy_info ) : object {
 	$args       = array(
 		'posts_per_page'   => - 1,
 		'offset'           => 0,
@@ -300,12 +300,17 @@ function get_product_posts( $taxonomy_info ) {
 		$post_id             = $posts->ID;
 		$post_author         = $posts->post_author;
 		$post_title          = $posts->post_title;
-		$product_title       = rwmb_get_value( 'text_product_title', array(), $post_id );
-		$product_description = rwmb_get_value( 'product_description', array(), $post_id );
-		$product_price       = rwmb_get_value( 'product_price', array(), $post_id );
-		$sale_price          = rwmb_get_value( 'sale_price', array(), $post_id );
-		$is_on_sale          = '1' === rwmb_get_value( 'is_on_sale', array(), $post_id );
-		$product_image       = get_the_post_thumbnail_url( $post_id );
+        $product_title       = ! empty( rwmb_get_value( 'text_product_title', array(), $post_id ) )
+            ? rwmb_get_value( 'text_product_title', array(), $post_id ) : null;
+        $product_description = ! empty( rwmb_get_value( 'product_description', array(), $post_id ) )
+            ? rwmb_get_value( 'product_description', array(), $post_id ) : null;
+        $product_price       = ! empty( rwmb_get_value( 'product_price', array(), $post_id ) )
+            ? rwmb_get_value( 'product_price', array(), $post_id ) : null;
+        $sale_price          = ! empty( rwmb_get_value( 'sale_price', array(), $post_id ) )
+            ? rwmb_get_value( 'sale_price', array(), $post_id ) : null;
+        $is_on_sale          = '1' === rwmb_get_value( 'is_on_sale', array(), $post_id );
+        $product_image       = ! empty( get_the_post_thumbnail_url( $post_id ) )
+            ? get_the_post_thumbnail_url( $post_id ) : null;
 
 		$post_data[ $post_id ]['author']              = $post_author;
 		$post_data[ $post_id ]['title']               = $post_title;
